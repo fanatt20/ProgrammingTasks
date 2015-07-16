@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Dominoes
 {
-    public class Domino 
+    public class Domino
     {
         protected readonly int _firstNumber;
         protected readonly int _secondNumber;
@@ -21,7 +21,7 @@ namespace Dominoes
 
         public int FirstNumber
         {
-            get { return  _firstNumber; }
+            get { return _firstNumber; }
         }
 
         public int SecondNumber
@@ -34,7 +34,7 @@ namespace Dominoes
     {
         private bool _linkedByFirstNumber;
         private bool _linkedBySecondNumber;
-        private bool _rightNumber;
+        private bool _side;
 
         public DominoNode()
         {
@@ -55,7 +55,13 @@ namespace Dominoes
             get
             {
                 var buf = RightDominoNode;
-                return buf._linkedBySecondNumber ? buf._firstNumber : buf._secondNumber;
+                var result = 0;
+                if (!buf._linkedBySecondNumber)
+                    result = buf._secondNumber;
+                if (!buf._linkedByFirstNumber)
+                    result = buf._firstNumber;
+
+                return result;
             }
         }
 
@@ -90,28 +96,37 @@ namespace Dominoes
             get
             {
                 var buf = LeftDominoNode;
-                return buf._linkedByFirstNumber ? buf._secondNumber : buf._firstNumber;
+                var result = 0;
+
+                if (!buf._linkedByFirstNumber)
+                    result = buf._firstNumber;
+                if (!buf._linkedBySecondNumber)
+                    result = buf._secondNumber;
+                return result;
             }
         }
 
-        public int NextNumber
+        public int CurrentNumber
         {
-            get
-            {
-                _rightNumber = !_rightNumber;
-                return _rightNumber ? RightNumber : LeftNumber;
-            }
+            get { return _side ? RightNumber : LeftNumber; }
         }
 
         public DominoNode Next { get; private set; }
         public DominoNode Previous { get; private set; }
 
+        public int GetNextNumber()
+        {
+            _side = !_side;
+            return _side ? RightNumber : LeftNumber;
+        }
+
         public bool TryAdd(DominoNode node)
         {
-            if (!TryLinkByLeftSide(node))
-                if (!TryLinkByRightSide(node))
-                    return false;
-            return true;
+            return _side ? TryLinkByRightSide(node) : TryLinkByLeftSide(node);
+            //if (!TryLinkByLeftSide(node))
+            //    if (!TryLinkByRightSide(node))
+            //        return false;
+            //    return true;
         }
 
         private bool TryLinkByLeftSide(DominoNode node)
@@ -158,7 +173,7 @@ namespace Dominoes
                 return true;
             }
 
-            if (_firstNumber != node._secondNumber) return false;
+            if (_secondNumber != node._secondNumber) return false;
 
             _linkedBySecondNumber = node._linkedBySecondNumber = true;
             return true;
@@ -241,7 +256,7 @@ namespace Dominoes
             {
                 try
                 {
-                    head.TryAdd(stack.InteligencePop(head.NextNumber));
+                    head.TryAdd(stack.InteligencePop(head.GetNextNumber()));
                     chanse = false;
                 }
                 catch (InvalidOperationException)
