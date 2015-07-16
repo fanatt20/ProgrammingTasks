@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Configuration;
 
@@ -118,6 +119,7 @@ namespace Dominoes
                 if (!leftDominoNode.TryLinkBySecondNumber(node))
                     return false;
             leftDominoNode.LeftAdd(node);
+            LeftDominoNode = node;
             return true;
         }
 
@@ -128,6 +130,7 @@ namespace Dominoes
                 if (!rightDominoNode.TryLinkBySecondNumber(node))
                     return false;
             rightDominoNode.RightAdd(node);
+            RightDominoNode = node;
             return true;
         }
 
@@ -167,7 +170,7 @@ namespace Dominoes
             {
                 Previous = node;
                 node.Next = this;
-                LeftDominoNode = node;
+
             }
         }
 
@@ -177,7 +180,6 @@ namespace Dominoes
             {
                 Next = node;
                 node.Previous = this;
-                RightDominoNode = node;
             }
         }
 
@@ -229,10 +231,16 @@ namespace Dominoes
     {
         private static bool QuickCheck(List<DominoNode> list)
         {
-            var query1 = list.Select(dmn => dmn.FirstNumber).Distinct();
-            var query2 = list.Select(dmn => dmn.SecondNumber).Distinct();
+            var query1 = list.Select(dmn => dmn.FirstNumber).Distinct().ToList();
+            var query2 = list.Select(dmn => dmn.SecondNumber).Distinct().ToList();
             if (query1.Count() != query2.Count())
                 return false;
+            query2.Sort();
+            query1.Sort();
+            if (query1.Where((el, i) => el != query2[i]).Count() != 0)
+                return false;
+
+
             Dictionary<int, bool> dict = query1.ToDictionary(i => i, i => false);
             foreach (var dominoNode in list)
             {
@@ -244,6 +252,8 @@ namespace Dominoes
         }
         private static void Main(string[] args)
         {
+
+            var rnd = new Random();
             var input = Console.ReadLine().Split(' ');
             var stack = new DominoNodeStack();
 
