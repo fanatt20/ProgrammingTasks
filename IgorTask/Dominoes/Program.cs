@@ -36,24 +36,22 @@ namespace Dominoes
         private bool _linkedByFirstNumber;
         private bool _linkedBySecondNumber;
         private bool _side;
-        private DominoNode _leftDominoNode;
-        private DominoNode _rightDominoNode;
 
         public DominoNode()
         {
-            _leftDominoNode = _rightDominoNode = this;
+            LeftDominoNode = RightDominoNode = this;
         }
 
         public DominoNode(int x, int y)
             : base(x, y)
         {
-            _leftDominoNode = _rightDominoNode = this;
+            LeftDominoNode = RightDominoNode = this;
         }
 
         public DominoNode(Domino domino)
             : base(domino.FirstNumber, domino.SecondNumber)
         {
-            _leftDominoNode = _rightDominoNode = this;
+            LeftDominoNode = RightDominoNode = this;
         }
 
         public int RightNumber
@@ -71,15 +69,9 @@ namespace Dominoes
             }
         }
 
-        public DominoNode RightDominoNode
-        {
-            get { return _rightDominoNode; }
-        }
+        public DominoNode RightDominoNode { get; private set; }
 
-        public DominoNode LeftDominoNode
-        {
-            get { return _leftDominoNode; }
-        }
+        public DominoNode LeftDominoNode { get; private set; }
 
         public int LeftNumber
         {
@@ -175,7 +167,7 @@ namespace Dominoes
             {
                 Previous = node;
                 node.Next = this;
-                _leftDominoNode = node;
+                LeftDominoNode = node;
             }
         }
 
@@ -185,7 +177,7 @@ namespace Dominoes
             {
                 Next = node;
                 node.Previous = this;
-                _rightDominoNode = node;
+                RightDominoNode = node;
             }
         }
 
@@ -195,15 +187,19 @@ namespace Dominoes
         }
     }
 
-    public class DominoStack
+    public class DominoNodeStack
     {
         private readonly List<DominoNode> _dominoes;
 
-        public DominoStack()
+        public DominoNodeStack()
         {
             _dominoes = new List<DominoNode>();
         }
 
+        public List<DominoNode> GetList()
+        {
+            return _dominoes;
+        }
         public bool IsEmpty
         {
             get { return _dominoes.Count == 0; }
@@ -231,53 +227,75 @@ namespace Dominoes
 
     internal class Program
     {
+        private static bool QuickCheck(List<DominoNode> list)
+        {
+            var query1 = list.Select(dmn => dmn.FirstNumber).Distinct();
+            var query2 = list.Select(dmn => dmn.SecondNumber).Distinct();
+            if (query1.Count() != query2.Count())
+                return false;
+            Dictionary<int, bool> dict = query1.ToDictionary(i => i, i => false);
+            foreach (var dominoNode in list)
+            {
+                dict[dominoNode.FirstNumber] = !dict[dominoNode.FirstNumber];
+                dict[dominoNode.SecondNumber] = !dict[dominoNode.SecondNumber];
+
+            }
+            return !dict.Any(b => b.Value);
+        }
         private static void Main(string[] args)
         {
             var input = Console.ReadLine().Split(' ');
-            var stack = new DominoStack();
+            var stack = new DominoNodeStack();
 
             foreach (var str in input)
             {
                 stack.Push(new DominoNode(int.Parse(str[0].ToString()), int.Parse(str[1].ToString())));
             }
-            Domino headDomino = stack.Pop();
-            var head = new DominoNode(headDomino);
-            var body = head;
-            var chanse = false;
-            while (!stack.IsEmpty)
+            if (QuickCheck(stack.GetList()))
             {
-                try
+                var head = new DominoNode(stack.Pop());
+
+                var chanse = false;
+                while (!stack.IsEmpty)
                 {
-                    head.TryAdd(stack.InteligencePop(head.GetNextNumber()));
-                    chanse = false;
+                    try
+                    {
+                        if (head.TryAdd(stack.InteligencePop(head.GetNextNumber())))
+                            chanse = false;
+
+
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        if (chanse)
+                            break;
+                        chanse = !chanse;
+                    }
                 }
-                catch (InvalidOperationException)
+
+
+                if (head.LeftNumber == head.RightNumber && stack.IsEmpty)
                 {
-                    if (chanse)
-                        break;
-
-                    chanse = !chanse;
-                }
-            }
-
-
-            if (head.LeftNumber == head.RightNumber && stack.IsEmpty)
-            {
-                Console.WriteLine("Цепочку возможно создать");
-
-                body = body.RightDominoNode;
-                while (body.Previous != null)
-                {
+                    Console.WriteLine("Цепочку возможно создать");
+                    var body = head;
+                    body = body.RightDominoNode;
+                    while (body.Previous != null)
+                    {
+                        Console.WriteLine(body.ToString());
+                        body = body.Previous;
+                    }
                     Console.WriteLine(body.ToString());
-                    body = body.Previous;
                 }
-                Console.WriteLine(body.ToString());
+                else
+                {
+                    Console.WriteLine("Цепочку невозможно создать");
+                }
+
             }
             else
             {
                 Console.WriteLine("Цепочку невозможно создать");
             }
-
             Console.ReadKey();
         }
     }
