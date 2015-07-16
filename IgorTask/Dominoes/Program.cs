@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Configuration;
 
 namespace Dominoes
 {
@@ -35,19 +36,24 @@ namespace Dominoes
         private bool _linkedByFirstNumber;
         private bool _linkedBySecondNumber;
         private bool _side;
+        private DominoNode _leftDominoNode;
+        private DominoNode _rightDominoNode;
 
         public DominoNode()
         {
+            _leftDominoNode = _rightDominoNode = this;
         }
 
         public DominoNode(int x, int y)
             : base(x, y)
         {
+            _leftDominoNode = _rightDominoNode = this;
         }
 
         public DominoNode(Domino domino)
             : base(domino.FirstNumber, domino.SecondNumber)
         {
+            _leftDominoNode = _rightDominoNode = this;
         }
 
         public int RightNumber
@@ -67,28 +73,12 @@ namespace Dominoes
 
         public DominoNode RightDominoNode
         {
-            get
-            {
-                var body = this;
-                while (body.Next != null)
-                {
-                    body = body.Next;
-                }
-                return body;
-            }
+            get { return _rightDominoNode; }
         }
 
         public DominoNode LeftDominoNode
         {
-            get
-            {
-                var body = this;
-                while (body.Previous != null)
-                {
-                    body = body.Previous;
-                }
-                return body;
-            }
+            get { return _leftDominoNode; }
         }
 
         public int LeftNumber
@@ -185,6 +175,7 @@ namespace Dominoes
             {
                 Previous = node;
                 node.Next = this;
+                _leftDominoNode = node;
             }
         }
 
@@ -194,6 +185,7 @@ namespace Dominoes
             {
                 Next = node;
                 node.Previous = this;
+                _rightDominoNode = node;
             }
         }
 
