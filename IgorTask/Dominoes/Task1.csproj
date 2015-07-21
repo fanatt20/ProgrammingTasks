@@ -58,6 +58,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domino.cs" />
+    <Compile Include="DominoBuilder.cs" />
+    <Compile Include="DominoNode.cs" />
+    <Compile Include="DominoNodeStack.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

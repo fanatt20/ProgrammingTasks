@@ -5,10 +5,11 @@ namespace Task2
 {
     public class MyMath
     {
-        private static Dictionary<int, ulong> _fibonacciDict = new Dictionary<int, ulong>{{1,1},{2,1}};
+        private static Dictionary<int, int> _fibonacciDict = new Dictionary<int, int>{{1,1},{2,1}};
 
         private static void Main(string[] args)
         {
+            Console.WriteLine();
             Console.ReadKey();
         }
 
@@ -36,16 +37,24 @@ namespace Task2
             return Fibonachi(n - 1) + Fibonachi(n - 2);
         }
 
-        private static ulong FibonacciTail(int num, ulong accum1)
+        public static UInt64 FibonacciTail(int num)
         {
-            if (num < 0)
-                throw new ArgumentOutOfRangeException("Number must be positive");
-            return _fibonacciDict.ContainsKey(num) ? _fibonacciDict[num] : FibonacciTail(num - 1, accum1);
+            return FibonacciTail(num, 1, 1, 0);
         }
+        private static UInt64 FibonacciTail(int num, UInt64 growNum1, UInt64 growNum2 = 1, UInt64 buff = 0)
+        {
+            if (num-- < 3)
+            {
+                return growNum1;
+            }
+            buff = growNum1;
+            growNum1 += growNum2;
+            growNum2 = buff;
+            
+            
+            return FibonacciTail(num,growNum1,growNum2,buff);
 
-        #region Tests
-
-        #endregion
+        }
     }
 }
 
