@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Configuration;
@@ -250,8 +251,18 @@ namespace Dominoes
             }
             return !dict.Any(b => b.Value);
         }
+
         private static void Main(string[] args)
         {
+            var initChain= "34 54 32 12 64 45";
+            var dominoBuilder = new DominoBuilder(initChain);
+
+            Debug.Assert(dominoBuilder.Dominos.Count == 6);
+
+            dominoBuilder.Sort();
+            Debug.Assert(dominoBuilder.Dominos.First().FirstNumber == 1 || dominoBuilder.Dominos.Last().SecondNumber == 1);
+            Debug.Assert(dominoBuilder.ToString() == "12 23 34 46 64 45");
+
 
             var rnd = new Random();
             var input = Console.ReadLine().Split(' ');
