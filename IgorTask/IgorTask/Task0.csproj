@@ -7,8 +7,8 @@
     <ProjectGuid>{2407E965-4F8E-49C3-83AD-31652220A006}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ProgrammingTasks</RootNamespace>
-    <AssemblyName>ProgrammingTasks</AssemblyName>
+    <RootNamespace>Task0</RootNamespace>
+    <AssemblyName>Task0</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

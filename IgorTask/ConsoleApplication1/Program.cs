@@ -11,10 +11,11 @@ namespace Task3
     {
         static void Main(string[] args)
         {
+            ExpressionParser parser = new ExpressionParser();
             while (true)
             {
-                ExpressionParser parser = new ExpressionParser(Console.ReadLine());
-                parser.Parse();
+                Console.WriteLine(parser.Parse(Console.ReadLine()));
+                
             }
             
             Console.ReadKey();
