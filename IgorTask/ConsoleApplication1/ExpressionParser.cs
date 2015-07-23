@@ -8,14 +8,15 @@ namespace Task3
     internal class ExpressionParser
     {
         /* Few Unicode Symbols:
-            \u0028 <=> (
-            \u0029 <=> )
-            \u002D <=> -
-            \u002B <=> +
-            \u002A <=> *
-            \u002F <=> /   
-            \u002E <=> .
-            \u002C <=> ,
+         *   \u0028 <=> (
+         *   \u0029 <=> )
+         *   \u002D <=> -
+         *   \u002B <=> +
+         *   \u002A <=> *
+         *   \u002F <=> /   
+         *   \u002E <=> .
+         *   \u002C <=> ,
+         *   \u003D <=> =
          */
         private const string _uMinus = @"\002D";
         private const string _uPlus = @"\u002B";
@@ -23,13 +24,18 @@ namespace Task3
         private const string _uDivide = @"\u002F";
         private const string _uLeftBrace = @"\u0028";
         private const string _uRightBrace = @"\u0029";
-        private readonly Dictionary<string, Func<double, double>> _funcs = new Dictionary<string, Func<double, double>>
+
+        private readonly Dictionary<string, Func<double, double>> _funcDictionary = new Dictionary
+            <string, Func<double, double>>
         {
             {"SIN", Math.Sin},
             {"COS", Math.Cos},
             {"TAN", Math.Tan},
             {"EXP", Math.Exp}
         };
+
+        private readonly Dictionary<string, double> _variablesDictionary = new Dictionary<string, double>();
+
         private readonly Regex _exprWithBraces =
             new Regex(
                 @"\u0028[\u002B|\u002D]?\d+(\u002E\d+)?([\u002A|\u002B|\u002D|\u002F][\u002D]?\d+(\u002E\d+)?)+\u0029");
@@ -41,6 +47,14 @@ namespace Task3
         private readonly Regex _funcWithArgument = new Regex(@"\w+\u0028\d+(\u002E\d+)?\u0029");
         private readonly Regex _minusMinusChecker = new Regex(@"\u002D\u002D");
 
+        private readonly Regex _variable =
+            new Regex(@"(\u0028[A-z]\w*\u0029)|([\u002A|\u002B|\u002D|\u002F]?[\u002D]?[A-z]\w*[^\u0028][\u002A|\u002B|\u002D|\u002F]?)");
+        private readonly Regex _variableWithBraces = new Regex(@"\u0028[A-z]\w*\u0029");
+        private readonly Regex _variableWithoutBraces = new Regex(@"[\u002A|\u002B|\u002D|\u002F][\u002D][A-z]\w*[^\u0028]");
+
+        private readonly Regex _declareVariable = new Regex(@"[A-z]\w*\u003D[^\u0028]");
+        private readonly Regex _declareFunc = new Regex(@"[A-z]\w*\u003D\u0028");
+
         private readonly Regex _multiplyAndDivideChecker =
             new Regex(@"[\u002D]?\d+(\u002E\d+)?[\u002A|\u002F][\u002D]?\d+(\u002E\d+)?");
 
@@ -50,16 +64,66 @@ namespace Task3
         private readonly Regex _plusAndMinusChecker =
             new Regex(@"[\u002D]?\d+(\u002E\d+)?[\u002B|\u002D][\u002D]?\d+(\u002E\d+)?");
 
-        private readonly char[] _symbols = {'+', '-', '*', '/'};
-        private readonly Regex _word = new Regex(@"\w+");
+        private readonly char[] _symbols = { '+', '-', '*', '/' };
+        private readonly Regex _word = new Regex(@"[A-z]\w*");
 
         public string Parse(string input)
+        {
+            if (_declareFunc.IsMatch(input))
+            {
+                DeclareFunc(input);
+                input = "Created";
+            }
+            else if (_declareVariable.IsMatch(input))
+            {
+                DeclareVariable(input);
+                input = "Created";
+            }
+            else
+                input = CalculateExpression(input);
+
+            return input;
+        }
+
+        private void DeclareFunc(string input)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void DeclareVariable(string input)
+        {
+            var variableName = _word.Match(input).Value;
+            var variableValue = double.Parse(_number.Match(input).Value);
+            if (!_variablesDictionary.ContainsKey(variableName))
+            {
+                _variablesDictionary.Add(variableName, variableValue);
+            }
+            else
+            {
+                _variablesDictionary[variableName] = variableValue;
+            }
+        }
+
+        private string CalculateExpression(string input)
         {
             input = _minusMinusChecker.Replace(input, "+");
             while (_plusAfterSymbolChecker.IsMatch(input))
             {
                 var symbol = _plusAfterSymbolChecker.Match(input).Value[0].ToString();
                 input = _plusAfterSymbolChecker.Replace(input, symbol);
+            }
+            while (_variable.IsMatch(input))
+            {
+                var item = _variable.Match(input);
+                var index = input.IndexOf(item.Value);
+                var varName = _word.Match(item.Value).Value;
+                var indexInExpr = item.Value.IndexOf(varName);
+
+                input = input.Remove(index + indexInExpr, varName.Length)
+                    .Insert(index + indexInExpr, _variablesDictionary[varName].ToString());
+
+
+
             }
             while (_exprWithBraces.IsMatch(input) || _funcWithArgument.IsMatch(input) ||
                    _exprWithoutBracers.IsMatch(input))
@@ -95,12 +159,11 @@ namespace Task3
             input = _minusMinusChecker.Replace(input, "+");
             return input;
         }
-
         private double CalculateFunc(string value)
         {
-            if (_funcs.ContainsKey(_word.Match(value).Value.ToUpper()))
+            if (_funcDictionary.ContainsKey(_word.Match(value).Value.ToUpper()))
             {
-                return _funcs[_word.Match(value).Value.ToUpper()].Invoke(double.Parse(_number.Match(value).Value));
+                return _funcDictionary[_word.Match(value).Value.ToUpper()].Invoke(double.Parse(_number.Match(value).Value));
             }
             return +0;
         }
@@ -140,7 +203,7 @@ namespace Task3
             var operand = '\0';
 
 
-            if ((Symbols) value[0] == Symbols.Plus)
+            if ((Symbols)value[0] == Symbols.Plus)
                 value = value.Remove(0, 1);
             leftOperand = _findNumbersWithMinus.Match(value).Value;
             value = value.Remove(0, leftOperand.Length);
@@ -159,16 +222,16 @@ namespace Task3
 
 
             var result = 0.0;
-            switch ((Symbols) operand)
+            switch ((Symbols)operand)
             {
                 case Symbols.Divide:
-                    result = double.Parse(leftOperand)/double.Parse(rightOperand);
+                    result = double.Parse(leftOperand) / double.Parse(rightOperand);
                     break;
                 case Symbols.Minus:
                     result = double.Parse(leftOperand) - double.Parse(rightOperand);
                     break;
                 case Symbols.Multiply:
-                    result = double.Parse(leftOperand)*double.Parse(rightOperand);
+                    result = double.Parse(leftOperand) * double.Parse(rightOperand);
                     break;
                 case Symbols.Plus:
                     result = double.Parse(leftOperand) + double.Parse(rightOperand);
