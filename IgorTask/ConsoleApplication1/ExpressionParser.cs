@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Task3
@@ -24,28 +23,35 @@ namespace Task3
         private const string _uDivide = @"\u002F";
         private const string _uLeftBrace = @"\u0028";
         private const string _uRightBrace = @"\u0029";
+        private readonly Dictionary<string, Func<double, double>> _funcs = new Dictionary<string, Func<double, double>>
+        {
+            {"SIN", Math.Sin},
+            {"COS", Math.Cos},
+            {"TAN", Math.Tan},
+            {"EXP", Math.Exp}
+        };
         private readonly Regex _exprWithBraces =
-            new Regex(@"\u0028[\u002B|\u002D]?\d+(\u002E\d+)?([\u002A|\u002B|\u002D|\u002F][\u002D]?\d+(\u002E\d+)?)+\u0029");
+            new Regex(
+                @"\u0028[\u002B|\u002D]?\d+(\u002E\d+)?([\u002A|\u002B|\u002D|\u002F][\u002D]?\d+(\u002E\d+)?)+\u0029");
 
         private readonly Regex _exprWithoutBracers =
             new Regex(@"[\u002B|\u002D]?\d+(\u002E\d+)?([\u002A|\u002B|\u002D|\u002F][\u002D]?\d+(\u002E\d+)?)+");
-        private readonly Regex _funcWithArgument=new Regex(@"\w+\u0028\d+(\u002E\d+)?\u0029");
 
         private readonly Regex _findNumbersWithMinus = new Regex(@"\u002D?\d+(\u002E\d+)?");
-        private  readonly Regex _word=new Regex(@"\w+");
-        private readonly Regex _number = new Regex(@"\u002D?\d+(\u002E\d+)?");
-
+        private readonly Regex _funcWithArgument = new Regex(@"\w+\u0028\d+(\u002E\d+)?\u0029");
         private readonly Regex _minusMinusChecker = new Regex(@"\u002D\u002D");
-        private readonly Regex _multiplyAndDivideChecker = new Regex(@"[\u002D]?\d+(\u002E\d+)?[\u002A|\u002F][\u002D]?\d+(\u002E\d+)?");
+
+        private readonly Regex _multiplyAndDivideChecker =
+            new Regex(@"[\u002D]?\d+(\u002E\d+)?[\u002A|\u002F][\u002D]?\d+(\u002E\d+)?");
+
+        private readonly Regex _number = new Regex(@"\u002D?\d+(\u002E\d+)?");
         private readonly Regex _plusAfterSymbolChecker = new Regex(@"[\u002A|\u002B|\u002D|\u002F]\u002B+");
-        private readonly Regex _plusAndMinusChecker = new Regex(@"[\u002D]?\d+(\u002E\d+)?[\u002B|\u002D][\u002D]?\d+(\u002E\d+)?");
 
-        private readonly char[] _symbols = { '+', '-', '*', '/' };
+        private readonly Regex _plusAndMinusChecker =
+            new Regex(@"[\u002D]?\d+(\u002E\d+)?[\u002B|\u002D][\u002D]?\d+(\u002E\d+)?");
 
-        public ExpressionParser()
-        {
-
-        }
+        private readonly char[] _symbols = {'+', '-', '*', '/'};
+        private readonly Regex _word = new Regex(@"\w+");
 
         public string Parse(string input)
         {
@@ -55,10 +61,9 @@ namespace Task3
                 var symbol = _plusAfterSymbolChecker.Match(input).Value[0].ToString();
                 input = _plusAfterSymbolChecker.Replace(input, symbol);
             }
-            while (_exprWithBraces.IsMatch(input) || _funcWithArgument.IsMatch(input) || _exprWithoutBracers.IsMatch(input))
+            while (_exprWithBraces.IsMatch(input) || _funcWithArgument.IsMatch(input) ||
+                   _exprWithoutBracers.IsMatch(input))
             {
-
-
                 while (_exprWithBraces.IsMatch(input))
                 {
                     foreach (var item in _exprWithBraces.Matches(input).Cast<Match>())
@@ -95,10 +100,11 @@ namespace Task3
         {
             if (_funcs.ContainsKey(_word.Match(value).Value.ToUpper()))
             {
-                return _funcs[_word.Match(value).Value.ToUpper()].Invoke(Double.Parse(_number.Match(value).Value));
+                return _funcs[_word.Match(value).Value.ToUpper()].Invoke(double.Parse(_number.Match(value).Value));
             }
             return +0;
         }
+
         private double Calculate(string value)
         {
             value = _minusMinusChecker.Replace(value, "+");
@@ -109,7 +115,8 @@ namespace Task3
                 {
                     firstNumberSign = char.IsDigit(item.Value[0]) ? "+" : string.Empty;
                     var index = value.IndexOf(item.Value);
-                    value = value.Remove(index, item.Value.Length).Insert(index, TwoNumbersCalculate(firstNumberSign + item.Value).ToString());
+                    value = value.Remove(index, item.Value.Length)
+                        .Insert(index, TwoNumbersCalculate(firstNumberSign + item.Value).ToString());
                 }
             }
             while (_plusAndMinusChecker.IsMatch(value))
@@ -119,7 +126,8 @@ namespace Task3
                 {
                     firstNumberSign = char.IsDigit(item.Value[0]) ? "+" : string.Empty;
                     var index = value.IndexOf(item.Value);
-                    value = value.Remove(index, item.Value.Length).Insert(index, TwoNumbersCalculate(firstNumberSign + item.Value).ToString());
+                    value = value.Remove(index, item.Value.Length)
+                        .Insert(index, TwoNumbersCalculate(firstNumberSign + item.Value).ToString());
                 }
             }
             return double.Parse(value.Replace('(', ' ').Replace(')', ' '));
@@ -132,7 +140,7 @@ namespace Task3
             var operand = '\0';
 
 
-            if ((Symbols)value[0] == Symbols.Plus)
+            if ((Symbols) value[0] == Symbols.Plus)
                 value = value.Remove(0, 1);
             leftOperand = _findNumbersWithMinus.Match(value).Value;
             value = value.Remove(0, leftOperand.Length);
@@ -151,16 +159,16 @@ namespace Task3
 
 
             var result = 0.0;
-            switch ((Symbols)operand)
+            switch ((Symbols) operand)
             {
                 case Symbols.Divide:
-                    result = double.Parse(leftOperand) / double.Parse(rightOperand);
+                    result = double.Parse(leftOperand)/double.Parse(rightOperand);
                     break;
                 case Symbols.Minus:
                     result = double.Parse(leftOperand) - double.Parse(rightOperand);
                     break;
                 case Symbols.Multiply:
-                    result = double.Parse(leftOperand) * double.Parse(rightOperand);
+                    result = double.Parse(leftOperand)*double.Parse(rightOperand);
                     break;
                 case Symbols.Plus:
                     result = double.Parse(leftOperand) + double.Parse(rightOperand);
@@ -171,7 +179,6 @@ namespace Task3
             return result;
         }
 
-
         private enum Symbols
         {
             Plus = '+',
@@ -179,14 +186,5 @@ namespace Task3
             Divide = '/',
             Multiply = '*'
         }
-
-        private Dictionary<string, Func<double, double>> _funcs = new Dictionary<string, Func<double, double>>
-        {
-            {"SIN",Math.Sin},
-            {"COS",Math.Cos},
-            {"TAN",Math.Tan},
-            {"EXP",Math.Exp}
-        };
-
     }
 }
