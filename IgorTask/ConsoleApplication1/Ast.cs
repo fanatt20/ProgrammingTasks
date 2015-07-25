@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Task3
 {
-    class Ast
+    public class Ast : IEquatable<Ast>
     {
 
         public string Value { get; private set; }
@@ -20,6 +20,32 @@ namespace Task3
             Value = value;
             IsOperator = isOperator;
 
+        }
+
+        public bool Equals(Ast other)
+        {
+
+            bool result = Value == other.Value;
+            if (Operands.Count != other.Operands.Count)
+                return false;
+
+            for (int i = 0; i < Operands.Count; i++)
+            {
+                if (!Operands[i].Equals(other.Operands[i]))
+                    return false;
+            }
+
+            return true;
+        }
+        public override string ToString()
+        {
+            var result = Value;
+            
+            foreach (var operand in Operands)
+            {
+                result += " "+operand;
+            }
+            return Value ;
         }
     }
 }

@@ -52,7 +52,8 @@
   <ItemGroup>
     <Compile Include="TokenizerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnitTest2.cs" />
+    <Compile Include="AstBuilderTest.cs" />
+    <Compile Include="AstSolverTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConsoleApplication1\Task3.csproj">
