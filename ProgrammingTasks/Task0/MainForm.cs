@@ -5,14 +5,14 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace IgorTask
+namespace Task0
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         private int _categoriesCount;
         private DataTable _dt = new DataTable();
 
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
         }
@@ -124,7 +124,7 @@ namespace IgorTask
                 head = head.Parent;
             }
             compareList.Reverse();
-            return !compareList.Where((string str,int i) => !((string) row.ItemArray[i]).Contains(str)).Any();
+            return !compareList.Where((string str, int i) => !((string) row.ItemArray[i]).Contains(str)).Any();
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)

@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Task3
 {
-    internal class ExpressionParser
+    internal class CalculatorWithRegexp
     {
         private readonly Regex _declareFunc = new Regex(@"^[A-z]\w*\u003D\u0028");
         private readonly Regex _declareVariable = new Regex(@"[A-z]\w*\u003D");

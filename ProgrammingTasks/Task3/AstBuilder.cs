@@ -1,31 +1,35 @@
-﻿namespace Task3
+﻿using System;
+using System.Data;
+
+namespace Task3
 {
     public class AstBuilder
     {
-        private readonly Tokenizer _tokenizer;
-        private string[] _braces = {"(", ")"};
-        private string[] _operatorsArray = {"+", "-", "/", "*"};
-
-        public AstBuilder(Tokenizer tokenizer)
+        public AstBuilder()
         {
-            _tokenizer = tokenizer;
         }
 
-        public Ast Build(string input)
+        public Ast Build(string[] input)
         {
             Ast head;
-            input = input + " )";
-            var tokenColl = _tokenizer.GetTokens(input);
-            head = new Ast(tokenColl[0], true);
-            var index = 1;
-            RecursionBuild(tokenColl, ref index, head);
+
+            head = new Ast(input[1], true);
+            var index = 2;
+            try
+            {
+                RecursionBuild(input, ref index, head);
+            }
+            catch (IndexOutOfRangeException)
+            {
+                throw new SyntaxErrorException();
+            }
             return head;
         }
 
         private void RecursionBuild(string[] tokens, ref int index, Ast head)
         {
-            while (tokens[index] != ")")
-                if (tokens[index] == "(")
+            while (!EndOfExpresion(tokens[index]))
+                if (SubExpresion(tokens[index]))
                 {
                     index++;
                     var newHead = new Ast(tokens[index], true);
@@ -38,6 +42,16 @@
                     head.Operands.Add(new Ast(tokens[index++]));
                 }
             index++;
+        }
+
+        private static bool EndOfExpresion(string token)
+        {
+            return token.Contains(")");
+        }
+
+        private static bool SubExpresion(string token)
+        {
+            return token.Contains("(");
         }
     }
 }

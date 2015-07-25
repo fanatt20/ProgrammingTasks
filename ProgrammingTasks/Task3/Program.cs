@@ -6,24 +6,12 @@ namespace Task3
     {
         private static void Main(string[] args)
         {
-            //ExpressionParser parser = new ExpressionParser();
-            //while (true)
-            //{
-            //    Console.WriteLine(parser.Parse(Console.ReadLine()));
-
-            //}
-
-            var builder = new AstBuilder(new Tokenizer());
-            Ast tree;
-            var solver = new AstSolver();
+            Interpreter interpreter=new Interpreter();
 
             while (true)
             {
-                tree = builder.Build(Console.ReadLine());
-                Console.WriteLine(solver.Solve(tree));
+                Console.WriteLine(interpreter.Parse(Console.ReadLine()));
             }
-            Console.WriteLine();
-            Console.ReadKey();
         }
     }
 }

@@ -21,13 +21,13 @@ namespace Task3.Tests
         [TestMethod]
         public void Tokenizer_Complex_Parsed()
         {
-            var input = "+ ( * 4 8 9 (/ 3 6) ) 3";
-            var str = "+ ( * 4 8 9 (/ 3 6) ) 3".Split(' ');
+            var input = "(+ (* 4 8 9 (/ 3 6)) 3)";
+            var result = new string[]{"(", "+", "(","*", "4", "8", "9", "(", "/", "3", "6", ")", ")", "3", ")"};
             var tokenizer = new Tokenizer();
             var tokens = tokenizer.GetTokens(input);
-            for (var i = 0; i < str.Length; i++)
+            for (var i = 0; i < result.Length; i++)
             {
-                Assert.AreEqual(str[i], tokens[i]);
+                Assert.AreEqual(result[i], tokens[i]);
             }
         }
     }

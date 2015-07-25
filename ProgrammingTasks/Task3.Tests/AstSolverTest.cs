@@ -10,7 +10,7 @@ namespace Task3.Tests
         {
             var actualResult =
                 (new AstSolver()).Solve(
-                    (new AstBuilder(new Tokenizer())).Build("+ 4 6 ( / 81 -3 ( * 3 3 ) ) ( - 10 12 )"));
+                    (new AstBuilder()).Build("(+ 4 6 (/ 81 -3 (* 3 3)) (- 10 12 ))"));
             Assert.AreEqual(5.0, actualResult);
         }
     }

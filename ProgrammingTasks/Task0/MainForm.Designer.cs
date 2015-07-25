@@ -1,6 +1,6 @@
-﻿namespace IgorTask
+﻿namespace Task0
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Требуется переменная конструктора.
@@ -48,7 +48,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(269, 68);
             this.button1.TabIndex = 1;
-            this.button1.Text = "button1";
+            this.button1.Text = "Read And Transfer";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -60,7 +60,7 @@
             this.dataGridView.Size = new System.Drawing.Size(334, 261);
             this.dataGridView.TabIndex = 2;
             // 
-            // Form1
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -68,8 +68,8 @@
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.treeView);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "MainForm";
+            this.Text = "MainForm";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
 

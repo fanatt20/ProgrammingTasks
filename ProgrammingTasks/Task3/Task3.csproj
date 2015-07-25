@@ -45,7 +45,8 @@
     <Compile Include="Ast.cs" />
     <Compile Include="AstBuilder.cs" />
     <Compile Include="AstSolver.cs" />
-    <Compile Include="ExpressionParser.cs" />
+    <Compile Include="CalculatorWithRegexp.cs" />
+    <Compile Include="Interpreter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tokenizer.cs" />

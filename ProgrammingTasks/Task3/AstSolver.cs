@@ -25,7 +25,8 @@ namespace Task3
 
         public double Solve(Ast node)
         {
-            return ApplyOperation(node.Value, node.Operands);
+            var possibleResult = 0.0;
+            return double.TryParse(node.Value,out possibleResult)?possibleResult: GetValue(node);
         }
 
         private double ApplyOperation(string p, List<Ast> list)

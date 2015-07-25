@@ -1,32 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Dominoes
 {
     internal class Program
     {
-        private static bool QuickCheck(List<DominoNode> list)
-        {
-            var query1 = list.Select(dmn => dmn.FirstNumber).Distinct().ToList();
-            var query2 = list.Select(dmn => dmn.SecondNumber).Distinct().ToList();
-            if (query1.Count() != query2.Count())
-                return false;
-            query2.Sort();
-            query1.Sort();
-            if (query1.Where((el, i) => el != query2[i]).Count() != 0)
-                return false;
-
-
-            var dict = query1.ToDictionary(i => i, i => false);
-            foreach (var dominoNode in list)
-            {
-                dict[dominoNode.FirstNumber] = !dict[dominoNode.FirstNumber];
-                dict[dominoNode.SecondNumber] = !dict[dominoNode.SecondNumber];
-            }
-            return !dict.Any(b => b.Value);
-        }
-
         private static void Main(string[] args)
         {
             var initChain =
