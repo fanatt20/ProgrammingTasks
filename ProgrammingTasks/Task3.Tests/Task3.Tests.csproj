@@ -56,7 +56,7 @@
     <Compile Include="AstSolverTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConsoleApplication1\Task3.csproj">
+    <ProjectReference Include="..\Task3\Task3.csproj">
       <Project>{e0ca4476-1a65-4479-ba1b-47dd806ccdda}</Project>
       <Name>Task3</Name>
     </ProjectReference>

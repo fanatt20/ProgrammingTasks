@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Task3;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Task3.Tests
 {
@@ -11,14 +9,15 @@ namespace Task3.Tests
         public void Tokenizer_SimpleExpr_Parsed()
         {
             var input = "+ 2 3";
-            var str = new string[] {"+", "2", "3"};
-            var tokenizer=new Tokenizer();
+            var str = new[] {"+", "2", "3"};
+            var tokenizer = new Tokenizer();
             var tokens = tokenizer.GetTokens(input);
-            for (int i = 0; i < str.Length; i++)
+            for (var i = 0; i < str.Length; i++)
             {
-                Assert.AreEqual(str[i],tokens[i]);
+                Assert.AreEqual(str[i], tokens[i]);
             }
         }
+
         [TestMethod]
         public void Tokenizer_Complex_Parsed()
         {
@@ -26,11 +25,10 @@ namespace Task3.Tests
             var str = "+ ( * 4 8 9 (/ 3 6) ) 3".Split(' ');
             var tokenizer = new Tokenizer();
             var tokens = tokenizer.GetTokens(input);
-            for (int i = 0; i < str.Length; i++)
+            for (var i = 0; i < str.Length; i++)
             {
                 Assert.AreEqual(str[i], tokens[i]);
             }
         }
-
     }
 }

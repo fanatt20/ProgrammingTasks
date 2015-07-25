@@ -1,26 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using  System.Text.RegularExpressions;
 
 namespace Task3
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             //ExpressionParser parser = new ExpressionParser();
             //while (true)
             //{
             //    Console.WriteLine(parser.Parse(Console.ReadLine()));
-                
+
             //}
-            
-            AstBuilder builder=new AstBuilder(new Tokenizer());
-            Ast tree ;
-            AstSolver solver=new AstSolver();
+
+            var builder = new AstBuilder(new Tokenizer());
+            Ast tree;
+            var solver = new AstSolver();
 
             while (true)
             {
@@ -29,7 +24,6 @@ namespace Task3
             }
             Console.WriteLine();
             Console.ReadKey();
-
         }
     }
 }
