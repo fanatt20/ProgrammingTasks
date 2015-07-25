@@ -1,0 +1,3 @@
+Transforms the table into a TreeView. Table species:
+L1 L2 LN Property1 Property2 PropertyM
+Information about the structure of the tables should go at the beginning of the file
