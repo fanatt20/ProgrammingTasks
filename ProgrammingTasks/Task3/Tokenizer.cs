@@ -7,7 +7,12 @@ namespace Task3
     {
         public string[] GetTokens(string input)
         {
+            
             input = input.Replace("(", " ( ").Replace(")", " ) ").Replace("  ", " ").Replace("  "," ").Trim();
+            if (input[0] != '(')
+                input = "( " + input;
+            if (input[input.Length - 1] != ')')
+                input = input + " )";
             return input.Split(' ');
         }
     }
