@@ -1,3 +1,0 @@
-Console calculator.
-1 Variant: ExpressionParser- based on Regex;
-2 Variant : AstBuilder,Ast,Tokenizer,AstSolver - based on AST
