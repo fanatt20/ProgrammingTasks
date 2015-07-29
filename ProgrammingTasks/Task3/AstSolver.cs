@@ -22,10 +22,17 @@ namespace Task3
             {"TAN", Math.Tan},
             {"EXP", Math.Exp}
         };
+        private Analyzer _analyzer;
+
+        public AstSolver(Analyzer _analyzer)
+        {
+            this._analyzer = _analyzer;
+        }
 
         public double Solve(Ast node)
         {
             var possibleResult = 0.0;
+            _analyzer.ReplaceVaribales(node);
             return double.TryParse(node.Value,out possibleResult)?possibleResult: GetValue(node);
         }
 

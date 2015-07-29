@@ -8,22 +8,32 @@ namespace Task3
 {
     public class Interpreter
     {
+        private readonly Analyzer _analyzer;
+        private readonly AstBuilder _builder;
+        private readonly AstSolver _solver;
+        private readonly Tokenizer _tokenizer;
 
-        private AstBuilder _builder = new AstBuilder();
-        private AstSolver _solver = new AstSolver();
-        private Tokenizer _tokenizer = new Tokenizer();
-        private Analyzer _analyzer = new Analyzer();
+        public Interpreter()
+        {
+            _tokenizer = new Tokenizer();
+            _analyzer = new Analyzer();
+            _builder = new AstBuilder();
+            _solver = new AstSolver(_analyzer);
+            
 
+        }
 
 
         public string Parse(string input)
         {
             var tokens = _tokenizer.GetTokens(input);
             var result = string.Empty;
+            if (tokens.Length < 3)
+                return "Input some data";
+
             if (IsExpresion(tokens))
             {
-                var tokenList = _analyzer.ReplaceVaribales(tokens);
-                result = _solver.Solve(_builder.Build(tokenList.ToArray())).ToString();
+                result = _solver.Solve(_builder.Build(tokens)).ToString();
             }
             else if (IsVariableDeclaration(tokens))
                 result = DeclareVariable(tokens);

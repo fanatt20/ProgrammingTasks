@@ -24,16 +24,14 @@ namespace Task3
             Variables.Add(variableName, variableValue);
             return true;
         }
-        public List<string> ReplaceVaribales(string[] tokens)
+        public void ReplaceVaribales(Ast node)
         {
-            var tokenList = tokens.ToList();
-            for (int i = 0; i < tokenList.Count; i++)
+            if (Variables.ContainsKey(node.Value))
+                node.Value = Variables[node.Value];
+            foreach (var operand in node.Operands)
             {
-                if (!Variables.ContainsKey(tokenList[i])) continue;
-                tokenList.Insert(i, Variables[tokenList[i]]);
-                tokenList.Remove(tokenList[i + 1]);
+                ReplaceVaribales(operand);
             }
-            return tokenList;
         }
     }
 }

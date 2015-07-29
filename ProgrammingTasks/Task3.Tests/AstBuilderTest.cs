@@ -30,7 +30,7 @@ namespace Task3.Tests
             tree.Operands.Add(buffer);
             var input = "(+ 4 6 (/ 81 -3 (* 3 3 ))( - 10 12 ))";
 
-            var actualTree = new AstBuilder().Build(input);
+            var actualTree = new AstBuilder().Build(new Tokenizer().GetTokens(input));
             Assert.IsTrue(actualTree.Equals(tree));
         }
     }

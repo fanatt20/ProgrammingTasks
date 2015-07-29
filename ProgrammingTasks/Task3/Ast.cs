@@ -12,7 +12,7 @@ namespace Task3
             IsOperator = isOperator;
         }
 
-        public string Value { get; private set; }
+        public string Value { get;  set; }
         public List<Ast> Operands { get; private set; }
         public bool IsOperator { get; private set; }
 
